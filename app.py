@@ -1,5 +1,5 @@
-from flask import Flask,request 
-from flask_restful import Api, Resource 
+from flask import Flask,request
+from flask_restful import Api, Resource
 from  user_issue  import db,Issue,IssueTags
 
 app = Flask(__name__)
@@ -18,8 +18,13 @@ class IssueRequest(Resource):
         Issues = []
         for issue in issues:
             print issue.__dict__
-            Issues.append({"title" : issue.__dict__['title'],
-                           "description" : issue.__dict__['description']
+            Issues.append({
+                            "id" : issue.__dict__['id'],
+                            "title" : issue.__dict__['title'],
+                           "description" : issue.__dict__['description'],
+                            "Tags" : list(map(lambda tag: tag.__dict__["tags"],
+                                              db.session.query(IssueTags)
+                                              .filter_by(primary_id = issue.__dict__['id'])))
                           })
 
 
