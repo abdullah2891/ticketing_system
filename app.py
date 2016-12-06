@@ -22,7 +22,7 @@ class IssueRequest(Resource):
                             "id" : issue.__dict__['id'],
                             "title" : issue.__dict__['title'],
                            "description" : issue.__dict__['description'],
-                            "Tags" : list(map(lambda tag: tag.__dict__["tags"],
+                            "Tags" : list(map(lambda tag:{"tag":  tag.__dict__["tags"], "id": tag.__dict__["id"]} ,
                                               db.session.query(IssueTags)
                                               .filter_by(primary_id = issue.__dict__['id'])))
                           })
