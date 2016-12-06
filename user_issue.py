@@ -14,7 +14,7 @@ class Issue(db.Model):
 class IssueTags(db.Model):
     id = db.Column(db.Integer, primary_key = True) 
     primary_id = db.Column(db.Integer)
-    tags = db.Column(db.String(50),unique = True)
+    tags = db.Column(db.String(50))
     def __init__(self,primary_id,  tags):
         self.tags = tags
         self.primary_id = primary_id
