@@ -1,6 +1,6 @@
 from flask import Flask,request
 from flask_restful import Api, Resource
-from  user_issue  import db,Issue,IssueTags
+from  user_issue  import *
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI']='mysql+pymysql://root:toor@localhost/jira'
@@ -24,7 +24,9 @@ class IssueRequest(Resource):
                            "description" : issue.__dict__['description'],
                             "Tags" : list(map(lambda tag:{"tag":  tag.__dict__["tags"], "id": tag.__dict__["id"]} ,
                                               db.session.query(IssueTags)
-                                              .filter_by(primary_id = issue.__dict__['id'])))
+                                              .filter_by(primary_id = issue.__dict__['id']))), 
+                            "Comment": list(map(lambda comment :  {"comments":  comment.__dict__["comment"]} , 
+                                                db.session.query(IssueComment).filter_by(primary_id= issue.__dict__['id'])))
                           })
 
 
@@ -59,9 +61,19 @@ class TagRequest(Resource):
         db.session.commit()
         return {"status":"ok"}
 
+class CommentRequest(Resource): 
+    def get(self,id):
+        pass 
+    def post(self,id): 
+        data = request.get_json()
+        newComment = IssueComment(id, data['comment'])
+        db.session.add(newComment)
+        db.session.commit()
+        return {"status":"Comment created"}
+
 api.add_resource(IssueRequest, '/issue')
 api.add_resource(TagRequest, '/issue/<int:id>')
-
+api.add_resource(CommentRequest, '/issue/comment/<int:id>')
 if __name__ == '__main__':
     app.run(debug=True)
 

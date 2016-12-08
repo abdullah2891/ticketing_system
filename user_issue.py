@@ -18,3 +18,14 @@ class IssueTags(db.Model):
     def __init__(self,primary_id,  tags):
         self.tags = tags
         self.primary_id = primary_id
+
+
+class IssueComment(db.Model):
+    id = db.Column(db.Integer, primary_key =True)
+    primary_id = db.Column(db.Integer)
+    comment = db.Column(db.String(500))
+
+    def __init__(self,primary_id,comment):
+        self.primary_id = primary_id
+        self.comment = comment
+
